@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<TITLE> ccbox</TITLE>
+	
+	<link rel="stylesheet" href="css/demo.css" type="text/css">
+	<link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="js/jquery.ztree.excheck.js"></script>
+	
+	<SCRIPT type="text/javascript">
+		
+		var setting = {
+			check: {
+				enable: true,
+				chkDisabledInherit: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			}
+		};
+
+		var zNodes =[
+			{ id:1, pId:0, name:"图层", open:true, checked:false},
+			{ id:11, pId:1, name:"矢量数据", open:true},
+			{ id:111, pId:11, name:"省界"},
+			{ id:112, pId:11, name:"河流"},
+			{ id:113, pId:11, name:"铁路"},
+			{ id:12, pId:1, name:"栅格数据", open:true},
+			{ id:121, pId:12, name:"卫星影像"},
+			{ id:122, pId:12, name:"数字高程模型", chkDisabled:true},
+			{ id:13, pId:1, name:"三维模型", isParent:true},
+			{ id:131, pId:13, name:"建筑物", chkDisabled:true},
+			
+		];
+		
+		var code;
+		
+		function setCheck() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			py = $("#py").attr("checked")? "p":"",
+			sy = $("#sy").attr("checked")? "s":"",
+			pn = $("#pn").attr("checked")? "p":"",
+			sn = $("#sn").attr("checked")? "s":"",
+			type = { "Y":py + sy, "N":pn + sn};
+			zTree.setting.check.chkboxType = type;
+			showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
+		}
+		function showCode(str) {
+			if (!code) code = $("#code");
+			code.empty();
+			code.append("<li>"+str+"</li>");
+		}
+		
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			setCheck();
+			$("#py").bind("change", setCheck);
+			$("#sy").bind("change", setCheck);
+			$("#pn").bind("change", setCheck);
+			$("#sn").bind("change", setCheck);
+		});
+		
+	</SCRIPT>
+</HEAD>
+
+<BODY>
+
+<div class="content_wrap">
+	<div class="zTreeDemoBackground left">
+		<ul id="treeDemo" class="ztree"></ul>
+	</div>
+	
+</div>
+</BODY>
+</HTML>
