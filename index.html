@@ -20,30 +20,67 @@
             margin: 0px;
             padding: 0px;
         }
+        #dd{
+            position: relative;
+        }
+        #zt{
+            position: absolute;
+            left: 10px;
+            top: 50px;
+        }
     </style>
-    <style>
-        @import url(bucket.css);
-    </style>
+
+
 
 
 </head>
 
 <body>
 
-
-    <div class="zTreeDemoBackground left" style="overflow-y: auto;">
-        <ul id="treeDemo" class="ztree"></ul>
-    </div>
-    <div id="cesiumContainer" style="height: 100%;"></div>
+    <div id="dd">
+        <div id="cesiumContainer" style="height: 100%;"></div>
+        
+        <div id="zt">
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+    
+        </div>
+    
 
     <script>
-        var viewer = new Cesium.Viewer('cesiumContainer');
 
+        // var viewer = new Cesium.Viewer('cesiumContainer');
+        "use strict";
+
+
+        var guge = new Cesium.UrlTemplateImageryProvider({
+            url: 'http://www.google.cn/maps/vt?lyrs=s@800&x={x}&y={y}&z={z}',
+            tilingScheme: new Cesium.WebMercatorTilingScheme(),
+            minimumLevel: 1,
+            maximumLevel: 20
+        });
+
+
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMjM5OWRlZi1jMTZiLTRlNDQtYjE3OC03ZTFmMmMyOGU3ODEiLCJpZCI6MTkxOTEsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzUxMjA4MDd9.VwZOjNxQ7uMJ5iM1lYRMplZvLWXHUQzdUo_maFjgtuI';
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            animation: false,
+            baseLayerPicker: false,
+            vrButton: true,
+            geocoder: true,
+            infoBox: true,
+            sceneModePicker: false,
+            timeline: false,
+            imageryProvider: guge,
+
+        });
+        viewer._cesiumWidget._creditContainer.style.display = "none";
+        viewer.scene.debugShowFramesPerSecond = true;   // Display FPS;
+        
         function addChina() {
             viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./sheng.json'))
         }
-
-        function addAmerica() {
+        
+        function addAmerican() {
             viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./ne_10m_us_states.topojson'))
         }
 
@@ -56,22 +93,6 @@
 
         }
 
-        function addLayer(url) {
-            viewer.dataSources.add(Cesium.GeoJsonDataSource.load(url, {
-                stroke: Cesium.Color.HOTPINK,
-                fill: Cesium.Color.BLUE.withAlpha(0.5),
-                strokeWidth: 5
-            }));
-        }
-
-
-        addChina();
-        // addAmerica();
-        // addRailway();
-        // addLayer('./mian.geojson');
-        // addLayer('./river.json');
-
-        //ztree
         var setting = {
 			check: {
 				enable: true,
@@ -83,7 +104,7 @@
 				}
             },
             callback: {
-                onCheck: addSheng()
+                onCheck: chooseNode,
             },
             view: {
                 
@@ -104,11 +125,18 @@
 			{ id:13, pId:1, name:"三维模型", isParent:true},
 			{ id:131, pId:13, name:"建筑物", chkDisabled:true},
 			
-		];
-
-        function addSheng(event, treeId, treeNode) {
-            addChina();
+        ];
+        
+        function chooseNode(event, treeId, treeNode) {
+            if (treeNode.id == 111) {
+                return addChina();
+            }
+            if (treeNode.id == 113) {
+                return addRailway();
+            }
         }
+
+        
 
         $(document).ready(function(){
 			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
