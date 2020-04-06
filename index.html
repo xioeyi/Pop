@@ -20,10 +20,12 @@
             margin: 0px;
             padding: 0px;
         }
-        #dd{
+
+        #dd {
             position: relative;
         }
-        #zt{
+
+        #zt {
             position: absolute;
             left: 10px;
             top: 50px;
@@ -39,16 +41,15 @@
 
     <div id="dd">
         <div id="cesiumContainer" style="height: 100%;"></div>
-        
+
         <div id="zt">
             <ul id="treeDemo" class="ztree"></ul>
         </div>
-    
-        </div>
-    
+
+    </div>
+
 
     <script>
-
         // var viewer = new Cesium.Viewer('cesiumContainer');
         "use strict";
 
@@ -61,7 +62,8 @@
         });
 
 
-        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMjM5OWRlZi1jMTZiLTRlNDQtYjE3OC03ZTFmMmMyOGU3ODEiLCJpZCI6MTkxOTEsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzUxMjA4MDd9.VwZOjNxQ7uMJ5iM1lYRMplZvLWXHUQzdUo_maFjgtuI';
+        Cesium.Ion.defaultAccessToken =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhMjM5OWRlZi1jMTZiLTRlNDQtYjE3OC03ZTFmMmMyOGU3ODEiLCJpZCI6MTkxOTEsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NzUxMjA4MDd9.VwZOjNxQ7uMJ5iM1lYRMplZvLWXHUQzdUo_maFjgtuI';
         var viewer = new Cesium.Viewer('cesiumContainer', {
             animation: false,
             baseLayerPicker: false,
@@ -74,12 +76,13 @@
 
         });
         viewer._cesiumWidget._creditContainer.style.display = "none";
-        viewer.scene.debugShowFramesPerSecond = true;   // Display FPS;
-        
+        viewer.scene.debugShowFramesPerSecond = true; // Display FPS;
+
         function addChina() {
-            viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./sheng.json'))
+            let aaa = viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./sheng.json'));
+            aaa();
         }
-        
+
         function addAmerican() {
             viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./ne_10m_us_states.topojson'))
         }
@@ -103,58 +106,119 @@
         }
 
         var setting = {
-			check: {
-				enable: true,
-				
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
+            check: {
+                enable: true,
+
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
             },
             callback: {
                 onCheck: chooseNode,
             },
             view: {
-                
+
             }
         };
-        setting.check.chkboxType = {"Y" : "s", "N" : "s"};
-        
+        setting.check.chkboxType = {
+            "Y": "s",
+            "N": "s"
+        };
 
-		var zNodes =[
-			{ id:1, pId:0, name:"图层", open:true, checked:false},
-			{ id:11, pId:1, name:"矢量数据", open:true},
-			{ id:111, pId:11, name:"省界"},
-			{ id:112, pId:11, name:"河流"},
-			{ id:113, pId:11, name:"铁路"},
-			{ id:12, pId:1, name:"栅格数据", open:true},
-			{ id:121, pId:12, name:"卫星影像"},
-			{ id:122, pId:12, name:"数字高程模型", chkDisabled:true},
-			{ id:13, pId:1, name:"三维模型", isParent:true},
-			{ id:131, pId:13, name:"建筑物", chkDisabled:true},
-			
+
+        var zNodes = [{
+                id: 1,
+                pId: 0,
+                name: "图层",
+                open: true,
+                checked: false
+            },
+            {
+                id: 11,
+                pId: 1,
+                name: "矢量数据",
+                open: true
+            },
+            {
+                id: 111,
+                pId: 11,
+                name: "省界"
+            },
+            {
+                id: 112,
+                pId: 11,
+                name: "河流"
+            },
+            {
+                id: 113,
+                pId: 11,
+                name: "铁路"
+            },
+            {
+                id: 12,
+                pId: 1,
+                name: "栅格数据",
+                open: true
+            },
+            {
+                id: 121,
+                pId: 12,
+                name: "卫星影像"
+            },
+            {
+                id: 122,
+                pId: 12,
+                name: "数字高程模型",
+                chkDisabled: true
+            },
+            {
+                id: 13,
+                pId: 1,
+                name: "三维模型",
+                isParent: true
+            },
+            {
+                id: 131,
+                pId: 13,
+                name: "建筑物",
+                chkDisabled: true
+            },
+
         ];
-        
+
         function chooseNode(event, treeId, treeNode) {
-            if (treeNode.id == 111) {
-                return addChina();
+            if (treeNode.checked == true) {
+                if (treeNode.id == 111) {
+                    return addChina();
+                }
+                if (treeNode.id == 113) {
+                    return addRailway();
+                }
+                if (treeNode.id == 112) {
+                    return addRiver();
+                }
             }
-            if (treeNode.id == 113) {
-                return addRailway();
+            if (treeNode.checked == false) {
+                if (treeNode.id == 111) {
+                    return viewer.dataSources.removeAll(); 
+                }
+                if (treeNode.id == 113) {
+                    return addRailway();
+                }
+                if (treeNode.id == 112) {
+                    return addRiver();
+                }
             }
-            if (treeNode.id == 112) {
-                return addRiver();
-            }
+
         }
 
-        
 
-        $(document).ready(function(){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-		});
 
-        
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        });
     </script>
 
 </body>
