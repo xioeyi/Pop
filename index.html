@@ -93,6 +93,15 @@
 
         }
 
+        function addRiver() {
+            viewer.dataSources.add(Cesium.GeoJsonDataSource.load('./river.json', {
+                stroke: Cesium.Color.BLUE,
+                fill: Cesium.Color.BLUE.withAlpha(0.5),
+                strokeWidth: 5
+            }));
+
+        }
+
         var setting = {
 			check: {
 				enable: true,
@@ -133,6 +142,9 @@
             }
             if (treeNode.id == 113) {
                 return addRailway();
+            }
+            if (treeNode.id == 112) {
+                return addRiver();
             }
         }
 
