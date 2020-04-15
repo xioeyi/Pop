@@ -36,53 +36,55 @@
             //经纬度，高程
             // destination: Cesium.Cartesian3.fromDegrees(118.35, 35.05, 15000.0);
             //中国x: -3142554.528748818，y: 10219538.154816993，z: 8134694.527218356
-            destination: new Cesium.Cartesian3(-2751201.607077297, 5045432.193487308, 4196281.121639684)
+            destination: new Cesium.Cartesian3(-3142554.528748818,10219538.154816993, 8134694.527218356)
         });
     });
 
     //初始画面
     viewer.camera.setView({
-        destination: new Cesium.Cartesian3(-2751201.607077297, 5045432.193487308, 4196281.121639684),
+        destination: new Cesium.Cartesian3(-2791095.0587334917, 9783995.590038424, 3040332.6557501554),
         orientation: {
             // 指向
-            heading: 6.283185307179586,//Cesium.Math.toRadians(90, 0),
+            heading: 6.194708147480505,//Cesium.Math.toRadians(90, 0),
             // 视角
-            pitch: -1.5707963267948966,//Cesium.Math.toRadians(-90),
-            roll: 0.0,
+            pitch: -1.2228434797822998,//Cesium.Math.toRadians(-90),
+            roll: 0.0003294886566802546,
         }
 
     })
 
     function addSheng() {
         let promise = Cesium.GeoJsonDataSource.load('../data/geojson/sheng.json');
-        promise.then(function(dataSource) {
+        promise.then(function (dataSource) {
             viewer.dataSources.add(dataSource);
             //alert("OK");
-    
-        }).otherwise(function(error) {
+
+        }).otherwise(function (error) {
             window.alert(error);
         })
     }
-    
+
     function addRiver() {
-        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../data/geojson/river.json'), {
-            stroke : Cesium.Color.BLUE,
-            strokeWidth : 3,
-        });
+        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../data/geojson/river.json', {
+            stroke: Cesium.Color.BLUE,
+            fill: Cesium.Color.BLUE.withAlpha(0.5),
+            strokeWidth: 5
+        }));
 
     }
-    
+
     function addRailway() {
-        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../data/geojson/railway.json'), {
-            stroke : Cesium.Color.INDIGO,
-            strokeWidth : 1.5,
-        });
+        viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../data/geojson/railway.json', {
+            stroke: Cesium.Color.HOTPINK,
+            fill: Cesium.Color.BLUE.withAlpha(0.5),
+            strokeWidth: 4
+        }));
     }
 
     var setting = {
         check: {
             enable: true,
-    
+
         },
         data: {
             simpleData: {
@@ -93,15 +95,15 @@
             onCheck: chooseNode,
         },
         view: {
-    
+
         }
     };
     setting.check.chkboxType = {
         "Y": "s",
         "N": "s"
     };
-    
-    
+
+
     var zNodes = [{
         id: 1,
         pId: 0,
@@ -159,9 +161,9 @@
         name: "建筑物",
         chkDisabled: true
     },
-    
+
     ];
-    
+
     function chooseNode(event, treeId, treeNode) {
         if (treeNode.checked == true) {
             if (treeNode.id == 111) {
@@ -185,11 +187,11 @@
                 return findAndRemove("railway.json");
             }
         }
-    
+
     }
-    
-    
-    
+
+
+
     function findAndRemove(name) {
         let dataSources = viewer.dataSources;
         for (let i = 0; i < viewer.dataSources.length; i++) {
@@ -199,9 +201,9 @@
             }
         }
     }
-    
-    
-    
+
+
+
     $(document).ready(function () {
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
     });
